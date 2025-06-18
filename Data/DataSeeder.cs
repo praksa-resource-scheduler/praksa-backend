@@ -1,5 +1,4 @@
-﻿// DataSeeder.cs
-using SchedulerApp.Data;
+﻿using SchedulerApp.Data;
 using SchedulerApp.Models.Entities;
 using System;
 

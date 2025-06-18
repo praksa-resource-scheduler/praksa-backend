@@ -29,6 +29,11 @@ builder.Services.AddHealthChecks()
 
 var app = builder.Build();
 
+if(app.Environment.IsDevelopment())
+{
+    DataSeeder.SeedDevelopmentData(app.Services);
+}
+
 // Test the connection string at startup
 using (var scope = app.Services.CreateScope())
 {
