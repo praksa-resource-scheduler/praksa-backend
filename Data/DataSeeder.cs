@@ -9,6 +9,12 @@ public static class DataSeeder
         using var scope = serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
+
+        context.Bookings.RemoveRange(context.Bookings);
+        context.Users.RemoveRange(context.Users);
+        context.Rooms.RemoveRange(context.Rooms);
+        context.SaveChanges();
+
         if (!context.Users.Any())
         {
             var user1 = new User
