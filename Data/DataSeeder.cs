@@ -43,7 +43,7 @@ public static class DataSeeder
                 EmailAddress = "room1@example.com",
                 FloorNumber = 1,
                 DisplayName = "Conference Room A",
-                IsWheelChairAccessible = true
+                IsWheelchairAccessible = true
             };
 
             var room2 = new Room
@@ -54,7 +54,7 @@ public static class DataSeeder
                 EmailAddress = "room2@example.com",
                 FloorNumber = 2,
                 DisplayName = "Meeting Room B",
-                IsWheelChairAccessible = false
+                IsWheelchairAccessible = false
             };
 
             var booking1 = new Booking

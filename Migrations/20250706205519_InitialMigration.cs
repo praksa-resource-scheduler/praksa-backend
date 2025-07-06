@@ -21,7 +21,7 @@ namespace SchedulerApp.Migrations
                     EmailAddress = table.Column<string>(type: "text", nullable: false),
                     FloorNumber = table.Column<int>(type: "integer", nullable: false),
                     DisplayName = table.Column<string>(type: "text", nullable: false),
-                    IsWheelChairAccessible = table.Column<bool>(type: "boolean", nullable: false)
+                    IsWheelchairAccessible = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {

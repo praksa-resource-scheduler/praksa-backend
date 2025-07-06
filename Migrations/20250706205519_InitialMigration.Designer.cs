@@ -12,7 +12,7 @@ using SchedulerApp.Data;
 namespace SchedulerApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250616211135_inital migration")]
+    [Migration("20250706205519_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -86,7 +86,7 @@ namespace SchedulerApp.Migrations
                     b.Property<int>("FloorNumber")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("IsWheelChairAccessible")
+                    b.Property<bool>("IsWheelchairAccessible")
                         .HasColumnType("boolean");
 
                     b.HasKey("Id");

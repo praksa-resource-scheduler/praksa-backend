@@ -83,7 +83,7 @@ namespace SchedulerApp.Migrations
                     b.Property<int>("FloorNumber")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("IsWheelChairAccessible")
+                    b.Property<bool>("IsWheelchairAccessible")
                         .HasColumnType("boolean");
 
                     b.HasKey("Id");
