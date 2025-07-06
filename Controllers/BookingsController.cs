@@ -2,14 +2,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SchedulerApp.Data;
 using SchedulerApp.Models.Entities;
+using SchedulerApp.Models.Dtos;
 
 namespace SchedulerApp.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class BookingsController(AppDbContext context) : ControllerBase
+    [Route("api/reservations")]
+    public class BookingsController : ControllerBase
     {
-        private readonly AppDbContext _context = context;
+        private readonly AppDbContext _context;
+
+        public BookingsController(AppDbContext context)
+        {
+            _context = context;
+        }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Booking>>> GetBookings()
@@ -19,6 +25,57 @@ namespace SchedulerApp.Controllers
                 .Include(b => b.User)
                 .ToListAsync();
         }
-    }
 
+        [HttpPost]
+        public async Task<ActionResult<Booking>> CreateBooking([FromBody] BookingCreateDto dto)
+        {
+            if (dto.RoomId == Guid.Empty)
+                return BadRequest("RoomId is required.");
+
+            if (dto.UserId == Guid.Empty)
+                return BadRequest("UserId is required.");
+
+            if (string.IsNullOrWhiteSpace(dto.Purpose))
+                return BadRequest("Purpose is required.");
+
+            if (dto.StartTime >= dto.EndTime)
+                return BadRequest("StartTime must be before EndTime.");
+
+            var room = await _context.Rooms.FindAsync(dto.RoomId);
+            if (room == null)
+                return NotFound("Room not found.");
+
+            var user = await _context.Users.FindAsync(dto.UserId);
+            if (user == null)
+                return NotFound("User not found.");
+
+            bool overlaps = await _context.Bookings.AnyAsync(b =>
+                b.RoomId == dto.RoomId &&
+                b.Date == dto.Date &&
+                (
+                    (dto.StartTime >= b.StartTime && dto.StartTime < b.EndTime) ||
+                    (dto.EndTime > b.StartTime && dto.EndTime <= b.EndTime) ||
+                    (dto.StartTime <= b.StartTime && dto.EndTime >= b.EndTime)
+                ));
+            if (overlaps)
+                return Conflict("Reservation overlap.");
+
+            var booking = new Booking
+            {
+                Id = Guid.NewGuid(),
+                CreatedAt = TimeOnly.FromDateTime(DateTime.Now),
+                Date = dto.Date,
+                StartTime = dto.StartTime,
+                EndTime = dto.EndTime,
+                Purpose = dto.Purpose,
+                RoomId = dto.RoomId,
+                UserId = dto.UserId
+            };
+
+            _context.Bookings.Add(booking);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetBookings), new { id = booking.Id }, booking);
+        }
+    }
 }
