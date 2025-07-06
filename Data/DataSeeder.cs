@@ -7,7 +7,7 @@ public static class DataSeeder
     public static void SeedDevelopmentData(IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
 
         context.Bookings.RemoveRange(context.Bookings);
