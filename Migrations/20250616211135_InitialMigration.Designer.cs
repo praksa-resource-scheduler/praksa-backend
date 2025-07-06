@@ -13,7 +13,7 @@ namespace SchedulerApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20250616211135_inital migration")]
-    partial class initalmigration
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

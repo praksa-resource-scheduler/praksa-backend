@@ -60,13 +60,13 @@ public static class DataSeeder
             var booking1 = new Booking
             {
                 Id = Guid.Parse("00000000-0000-0000-0000-000000001001"),
-                Created_At = TimeOnly.Parse("09:00"),
+                CreatedAt = TimeOnly.Parse("09:00"),
                 Date = DateOnly.Parse("2025-06-18"),
-                Start_time = TimeOnly.Parse("10:00"),
-                End_time = TimeOnly.Parse("11:00"),
-                Description = "Prvi sastanak",
-                User_id = user1.Id,
-                Room_id = room1.Id
+                StartTime = TimeOnly.Parse("10:00"),
+                EndTime = TimeOnly.Parse("11:00"),
+                Purpose = "Prvi sastanak",
+                UserId = user1.Id,
+                RoomId = room1.Id
             };
 
             context.Users.AddRange(user1, user2);
