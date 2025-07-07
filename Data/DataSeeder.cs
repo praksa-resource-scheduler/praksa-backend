@@ -60,10 +60,9 @@ public static class DataSeeder
             var booking1 = new Booking
             {
                 Id = Guid.Parse("00000000-0000-0000-0000-000000001001"),
-                CreatedAt = TimeOnly.Parse("09:00"),
-                Date = DateOnly.Parse("2025-06-18"),
-                StartTime = TimeOnly.Parse("10:00"),
-                EndTime = TimeOnly.Parse("11:00"),
+                CreatedAt = DateTime.Parse("2025-06-15T09:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
+                StartTime = DateTime.Parse("2025-06-18T10:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
+                EndTime = DateTime.Parse("2025-06-18T11:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
                 Purpose = "Prvi sastanak",
                 UserId = user1.Id,
                 RoomId = room1.Id

@@ -51,7 +51,6 @@ namespace SchedulerApp.Controllers
 
             bool overlaps = await _context.Bookings.AnyAsync(b =>
                 b.RoomId == dto.RoomId &&
-                b.Date == dto.Date &&
                 (
                     (dto.StartTime >= b.StartTime && dto.StartTime < b.EndTime) ||
                     (dto.EndTime > b.StartTime && dto.EndTime <= b.EndTime) ||
@@ -63,10 +62,9 @@ namespace SchedulerApp.Controllers
             var booking = new Booking
             {
                 Id = Guid.NewGuid(),
-                CreatedAt = TimeOnly.FromDateTime(DateTime.Now),
-                Date = dto.Date,
-                StartTime = dto.StartTime,
-                EndTime = dto.EndTime,
+                CreatedAt = DateTime.UtcNow,
+                StartTime = DateTime.SpecifyKind(dto.StartTime, DateTimeKind.Utc),
+                EndTime = DateTime.SpecifyKind(dto.EndTime, DateTimeKind.Utc),
                 Purpose = dto.Purpose,
                 RoomId = dto.RoomId,
                 UserId = dto.UserId

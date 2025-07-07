@@ -4,9 +4,8 @@ namespace SchedulerApp.Models.Dtos
     {
         public Guid RoomId { get; set; }
         public Guid UserId { get; set; }
-        public DateOnly Date { get; set; }
-        public TimeOnly StartTime { get; set; }
-        public TimeOnly EndTime { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
         public string Purpose { get; set; } = null!;
     }
 }
