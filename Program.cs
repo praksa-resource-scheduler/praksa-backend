@@ -1,18 +1,27 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Npgsql; // Add this using directive
+using Npgsql;
 using SchedulerApp.Data;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+     {
+         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+     });
 
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();   
+builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddRouting(options =>
+{
+    options.LowercaseUrls = true;
+});
+
+builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
         npgsqlOptions => npgsqlOptions.CommandTimeout(360) // 3 minutes

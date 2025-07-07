@@ -11,7 +11,7 @@ using SchedulerApp.Data;
 
 namespace SchedulerApp.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20250616211135_inital migration")]
     partial class initalmigration
     {
