@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Npgsql;
 using SchedulerApp.Data;
+using SchedulerApp.Services;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddScoped<BookingService>();
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
      {
