@@ -59,6 +59,52 @@ namespace SchedulerApp.Controllers
             if (overlaps)
                 return Conflict("Reservation overlap.");
 
+
+            var dailyLimit = TimeSpan.FromMinutes(user.DailyLimitMinutes);
+
+            DateTime currentDate = dto.StartTime.Date;
+            DateTime endDate = dto.EndTime.Date;
+
+            while (currentDate <= endDate)
+            {
+                DateTime dayStart = currentDate;
+                DateTime dayEnd = currentDate.AddDays(1);
+
+                var userBookings = await _context.Bookings
+                    .Where(b => b.UserId == dto.UserId &&
+                                b.StartTime < dayEnd &&
+                                b.EndTime > dayStart)
+                    .ToListAsync();
+
+                TimeSpan bookedThatDay = userBookings
+                    .Aggregate(TimeSpan.Zero, (total, b) =>
+                    {
+                        var bookingStart = b.StartTime < dayStart ? dayStart : b.StartTime;
+                        var bookingEnd = b.EndTime > dayEnd ? dayEnd : b.EndTime;
+                        return total + (bookingEnd - bookingStart);
+                    });
+
+                var newStart = dto.StartTime < dayStart ? dayStart : dto.StartTime;
+                var newEnd = dto.EndTime > dayEnd ? dayEnd : dto.EndTime;
+                var newBookingDuration = newEnd > newStart ? newEnd - newStart : TimeSpan.Zero;
+
+                var totalWithNew = bookedThatDay + newBookingDuration;
+
+                if (totalWithNew > dailyLimit)
+                {
+                    return BadRequest(
+                        $"Booking limit of {dailyLimit.TotalMinutes} minutes exceeded for {currentDate:yyyy-MM-dd}. " +
+                        $"Already booked: {bookedThatDay.TotalMinutes} minutes. " +
+                        $"Attempted to book additional {newBookingDuration.TotalMinutes} minutes, " +
+                        $"exceeding the limit by {(bookedThatDay.TotalMinutes + newBookingDuration.TotalMinutes) - dailyLimit.TotalMinutes} minutes."
+                    );
+                }
+
+                currentDate = currentDate.AddDays(1);
+            }
+
+
+
             var booking = new Booking
             {
                 Id = Guid.NewGuid(),

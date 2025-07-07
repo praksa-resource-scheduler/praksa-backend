@@ -1,6 +1,5 @@
 ﻿using SchedulerApp.Data;
 using SchedulerApp.Models.Entities;
-using System;
 
 public static class DataSeeder
 {
@@ -24,7 +23,8 @@ public static class DataSeeder
                 Name = "Ante",
                 Surname = "Antic",
                 Organization = "Prva firma",
-                Phone = "123-456-7890"
+                Phone = "123-456-7890",
+                DailyLimitMinutes = 150
             };
 
             var user2 = new User
