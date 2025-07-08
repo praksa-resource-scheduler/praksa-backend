@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Npgsql;
 using SchedulerApp.Data;
 using SchedulerApp.Services;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +39,27 @@ builder.Services.AddHealthChecks()
         name: "postgresql",
         tags: new[] { "db" }
     );
+
+builder.Services.AddRateLimiter(rateLimiterOptions =>
+{
+    rateLimiterOptions.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+    {
+        var key = context.User.FindFirst("sub")?.Value ??
+                  context.Connection.RemoteIpAddress?.ToString() ??
+                  "anonymous";
+
+        return RateLimitPartition.GetFixedWindowLimiter(key, _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 20,
+            Window = TimeSpan.FromMinutes(1),
+            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+            QueueLimit = 2
+        });
+    });
+
+    rateLimiterOptions.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+});
+
 
 var app = builder.Build();
 
@@ -81,9 +104,7 @@ app.MapHealthChecks("/health/api", new HealthCheckOptions
     Predicate = check => check.Tags.Contains("api")
 });
 
-
+app.UseRateLimiter();
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
