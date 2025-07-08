@@ -12,8 +12,8 @@ using SchedulerApp.Data;
 namespace SchedulerApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250616211135_inital migration")]
-    partial class initalmigration
+    [Migration("20250707172842_ChangeBookingTimeTypes")]
+    partial class ChangeBookingTimeTypes
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,33 +31,30 @@ namespace SchedulerApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<TimeOnly>("Created_At")
-                        .HasColumnType("time without time zone");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Purpose")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<TimeOnly>("End_time")
-                        .HasColumnType("time without time zone");
-
-                    b.Property<Guid>("Room_id")
+                    b.Property<Guid>("RoomId")
                         .HasColumnType("uuid");
 
-                    b.Property<TimeOnly>("Start_time")
-                        .HasColumnType("time without time zone");
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("User_id")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Room_id");
+                    b.HasIndex("RoomId");
 
-                    b.HasIndex("User_id");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Bookings", (string)null);
                 });
@@ -86,7 +83,7 @@ namespace SchedulerApp.Migrations
                     b.Property<int>("FloorNumber")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("IsWheelChairAccessible")
+                    b.Property<bool>("IsWheelchairAccessible")
                         .HasColumnType("boolean");
 
                     b.HasKey("Id");
@@ -127,13 +124,13 @@ namespace SchedulerApp.Migrations
                 {
                     b.HasOne("SchedulerApp.Models.Entities.Room", "Room")
                         .WithMany("Bookings")
-                        .HasForeignKey("Room_id")
+                        .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SchedulerApp.Models.Entities.User", "User")
                         .WithMany("Bookings")
-                        .HasForeignKey("User_id")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

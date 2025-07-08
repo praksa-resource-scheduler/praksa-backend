@@ -1,6 +1,5 @@
 ﻿using SchedulerApp.Data;
 using SchedulerApp.Models.Entities;
-using System;
 
 public static class DataSeeder
 {
@@ -24,7 +23,8 @@ public static class DataSeeder
                 Name = "Ante",
                 Surname = "Antic",
                 Organization = "Prva firma",
-                Phone = "123-456-7890"
+                Phone = "123-456-7890",
+                DailyLimitMinutes = 150
             };
 
             var user2 = new User
@@ -43,7 +43,7 @@ public static class DataSeeder
                 EmailAddress = "room1@example.com",
                 FloorNumber = 1,
                 DisplayName = "Conference Room A",
-                IsWheelChairAccessible = true
+                IsWheelchairAccessible = true
             };
 
             var room2 = new Room
@@ -54,19 +54,18 @@ public static class DataSeeder
                 EmailAddress = "room2@example.com",
                 FloorNumber = 2,
                 DisplayName = "Meeting Room B",
-                IsWheelChairAccessible = false
+                IsWheelchairAccessible = false
             };
 
             var booking1 = new Booking
             {
                 Id = Guid.Parse("00000000-0000-0000-0000-000000001001"),
-                Created_At = TimeOnly.Parse("09:00"),
-                Date = DateOnly.Parse("2025-06-18"),
-                Start_time = TimeOnly.Parse("10:00"),
-                End_time = TimeOnly.Parse("11:00"),
-                Description = "Prvi sastanak",
-                User_id = user1.Id,
-                Room_id = room1.Id
+                CreatedAt = DateTime.Parse("2025-06-15T09:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
+                StartTime = DateTime.Parse("2025-06-18T10:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
+                EndTime = DateTime.Parse("2025-06-18T11:00:00Z", null, System.Globalization.DateTimeStyles.AdjustToUniversal),
+                Purpose = "Prvi sastanak",
+                UserId = user1.Id,
+                RoomId = room1.Id
             };
 
             context.Users.AddRange(user1, user2);

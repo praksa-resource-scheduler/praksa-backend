@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using SchedulerApp.Data;
 using SchedulerApp.Models.Entities;
@@ -6,10 +7,15 @@ using SchedulerApp.Models.Entities;
 namespace SchedulerApp.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class BookingsController(AppDbContext context) : ControllerBase
+    [Route("api/bookings")]
+    public class BookingsController : ControllerBase
     {
-        private readonly AppDbContext _context = context;
+        private readonly AppDbContext _context;
+
+        public BookingsController(AppDbContext context)
+        {
+            _context = context;
+        }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Booking>>> GetBookings()
@@ -20,5 +26,4 @@ namespace SchedulerApp.Controllers
                 .ToListAsync();
         }
     }
-
 }

@@ -9,7 +9,7 @@
         public required string EmailAddress { get; set; }
         public required int FloorNumber { get; set; }
         public required string DisplayName { get; set; }
-        public required bool IsWheelChairAccessible { get; set; }
+        public required bool IsWheelchairAccessible { get; set; }
 
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
     }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SchedulerApp.Migrations
 {
     /// <inheritdoc />
-    public partial class initalmigration : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,7 +21,7 @@ namespace SchedulerApp.Migrations
                     EmailAddress = table.Column<string>(type: "text", nullable: false),
                     FloorNumber = table.Column<int>(type: "integer", nullable: false),
                     DisplayName = table.Column<string>(type: "text", nullable: false),
-                    IsWheelChairAccessible = table.Column<bool>(type: "boolean", nullable: false)
+                    IsWheelchairAccessible = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
