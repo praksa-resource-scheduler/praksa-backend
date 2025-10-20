@@ -11,6 +11,7 @@ using System.Threading.RateLimiting;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<BookingService>();
+builder.Services.AddScoped<ReservationServices>();
 
 //This is supposed to fix cors issue
 builder.Services.AddCors(options =>
