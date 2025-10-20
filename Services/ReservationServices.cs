@@ -16,6 +16,33 @@ namespace SchedulerApp.Services
             _bookingService = bookingService;
         }
 
+        public async Task<(bool IsSuccess, string Message)> DeclineReservationRequestAsync(Guid requestID)
+        {
+            var request = await _context.ReservationRequests.FindAsync(requestID);
+            if (request == null)
+                return(false,  $"Unable to find {requestID}");
+
+            if (request.Status != "Pending")
+                return (false, "Reservation request is not pending, can only decline pending requests");
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                request.Status = "Declined";
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return (true, "Reservation request successfully declined.");
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return (false, $"Error accepting reservation request: {ex.Message}");
+            }
+        }
+
         public async Task<(bool IsSuccess, string Message)> AcceptReservationRequestAsync(Guid requestId)
         {
             var request = await _context.ReservationRequests.FindAsync(requestId);
@@ -38,7 +65,6 @@ namespace SchedulerApp.Services
             if (!string.IsNullOrEmpty(validationError))
                 return (false, validationError);
 
-            // Use a transaction for atomicity
             using var transaction = await _context.Database.BeginTransactionAsync();
 
             try

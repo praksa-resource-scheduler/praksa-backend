@@ -70,5 +70,18 @@ namespace SchedulerApp.Controllers
 
             return Ok(new { message = result.Message });
         }
+
+        [HttpPost("{id}/decline")]
+        public async Task<IActionResult> DeclineReservationRequest(Guid id)
+        {
+            var result = await _reservationService.DeclineReservationRequestAsync(id);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result.Message);
+            }
+
+            return Ok(new { message = result.Message });
+        }
     }
 }
