@@ -21,7 +21,7 @@ namespace SchedulerApp.Data
             modelBuilder.Entity<Models.Entities.User>().ToTable("Users");
             modelBuilder.Entity<Models.Entities.Booking>().ToTable("Bookings");
             modelBuilder.Entity<Models.Entities.ReservationRequest>().ToTable("ReservationRequests");
-
+            modelBuilder.Entity<Models.Entities.Admin>().ToTable("Admins");
         }
     }
 }
