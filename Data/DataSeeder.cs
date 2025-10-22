@@ -78,6 +78,7 @@ public static class DataSeeder
                 Phone = "000-000-0000"
             };
 
+            context.Admins.Add(admin1);
             context.Users.AddRange(user1, user2);
             context.Rooms.AddRange(room1, room2);
             context.Bookings.Add(booking1);
