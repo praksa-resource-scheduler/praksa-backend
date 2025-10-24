@@ -13,11 +13,13 @@ namespace SchedulerApp.Controllers
     {
         private readonly AppDbContext _context;
         private readonly BookingService _bookingService;
+        private readonly ReservationServices _reservationService;
 
-        public ReservationRequestsController(AppDbContext context, BookingService bookingService)
+        public ReservationRequestsController(AppDbContext context, BookingService bookingService, ReservationServices reservationService)
         {
             _context = context;
             _bookingService = bookingService;
+            _reservationService = reservationService;
         }
 
         [HttpGet]
@@ -56,6 +58,30 @@ namespace SchedulerApp.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetReservationRequests), new { id = reservationRequest.Id }, reservationRequest);
+        }
+
+        [HttpPost("{id}/accept")]
+        public async Task<IActionResult> AcceptReservationRequest(Guid id)
+        {
+            var result = await _reservationService.AcceptReservationRequestAsync(id);
+
+            if (!result.IsSuccess)
+                return BadRequest(result.Message);
+
+            return Ok(new { message = result.Message });
+        }
+
+        [HttpPost("{id}/decline")]
+        public async Task<IActionResult> DeclineReservationRequest(Guid id)
+        {
+            var result = await _reservationService.DeclineReservationRequestAsync(id);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result.Message);
+            }
+
+            return Ok(new { message = result.Message });
         }
     }
 }
