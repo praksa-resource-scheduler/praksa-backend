@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SchedulerApp.Data;
 using SchedulerApp.Models.Dtos;
+using SchedulerApp.Models.Entities;
+using System.Runtime.CompilerServices;
 
 namespace SchedulerApp.Services
 {
@@ -12,6 +15,42 @@ namespace SchedulerApp.Services
         public BookingService(AppDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<(bool IsSuccess, string Message)> ModifyBookingAsync(Guid id,BookingModifyDto dto)
+        {
+            var booking = await _context.Bookings.FindAsync(id);
+            if (booking == null)
+            {
+                return (false, "Booking not found");
+            }
+
+            if (dto.StartTime >= dto.EndTime)
+            {
+                return (false, "Start time must be before end time");
+            }
+
+            bool overlaps = await _context.Bookings.AnyAsync(b =>
+            b.Id != id &&
+            b.RoomId == booking.RoomId &&
+            (
+                (dto.StartTime >= b.StartTime && dto.StartTime < b.EndTime) ||
+                (dto.EndTime > b.StartTime && dto.EndTime <= b.EndTime) ||
+                (dto.StartTime <= b.StartTime && dto.EndTime >= b.EndTime)
+            ));
+
+            if (overlaps)
+                return (false, "Newly inputed time overlaps with already existing booking");
+
+            booking.StartTime = dto.StartTime;
+            booking.EndTime = dto.EndTime;
+
+            _context.Bookings.Update(booking);
+            await _context.SaveChangesAsync();
+
+            return (true, "Booking updated successfully.");
+
+
         }
 
         public async Task<string?> ValidateBookingAsync(BookingCreateDto dto)
