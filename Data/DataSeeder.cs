@@ -68,6 +68,17 @@ public static class DataSeeder
                 RoomId = room1.Id
             };
 
+            var admin1 = new Admin
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-00000000A001"),
+                Email = "muvodic@pmfst.hr",
+                Name = "Admin",
+                Surname = "Admin",
+                Organization = "PMF",
+                Phone = "000-000-0000"
+            };
+
+            context.Admins.Add(admin1);
             context.Users.AddRange(user1, user2);
             context.Rooms.AddRange(room1, room2);
             context.Bookings.Add(booking1);

@@ -77,7 +77,9 @@ namespace SchedulerApp.Controllers
             var result = await _reservationService.DeclineReservationRequestAsync(id);
 
             if (!result.IsSuccess)
+            {
                 return BadRequest(result.Message);
+            }
 
             return Ok(new { message = result.Message });
         }

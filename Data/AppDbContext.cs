@@ -13,6 +13,7 @@ namespace SchedulerApp.Data
         public DbSet<Models.Entities.User> Users { get; set; } = null!;
         public DbSet<Models.Entities.Booking> Bookings { get; set; } = null!;
         public DbSet<Models.Entities.ReservationRequest> ReservationRequests { get; set; } = null!;
+        public DbSet<Models.Entities.Admin> Admins { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -20,7 +21,7 @@ namespace SchedulerApp.Data
             modelBuilder.Entity<Models.Entities.User>().ToTable("Users");
             modelBuilder.Entity<Models.Entities.Booking>().ToTable("Bookings");
             modelBuilder.Entity<Models.Entities.ReservationRequest>().ToTable("ReservationRequests");
-
+            modelBuilder.Entity<Models.Entities.Admin>().ToTable("Admins");
         }
     }
 }

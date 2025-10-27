@@ -15,27 +15,15 @@ namespace SchedulerApp.Services
             _context = context;
             _bookingService = bookingService;
         }
-        public async Task<(bool IsSuccess, string Message)> DeclineReservationRequestAsync(Guid requestId)
+
+        public async Task<(bool IsSuccess, string Message)> DeclineReservationRequestAsync(Guid requestID)
         {
-            var request = await _context.ReservationRequests.FindAsync(requestId);
+            var request = await _context.ReservationRequests.FindAsync(requestID);
             if (request == null)
-                return (false, "Reservation request not found.");
+                return(false,  $"Unable to find {requestID}");
 
             if (request.Status != "Pending")
-                return (false, "Reservation request is not pending, can only decline pending requests.");
-
-            var bookingDto = new BookingCreateDto
-            {
-                RoomId = request.RoomId,
-                UserId = request.UserId,
-                StartTime = request.StartTime,
-                EndTime = request.EndTime,
-                Purpose = request.Purpose
-            };
-            var validationError = await _bookingService.ValidateBookingAsync(bookingDto);
-
-            if (!string.IsNullOrEmpty(validationError))
-                return (false, validationError);
+                return (false, "Reservation request is not pending, can only decline pending requests");
 
             using var transaction = await _context.Database.BeginTransactionAsync();
 
@@ -46,7 +34,7 @@ namespace SchedulerApp.Services
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                return (true, "Reservation request declines.");
+                return (true, "Reservation request successfully declined.");
             }
             catch (Exception ex)
             {
@@ -54,6 +42,7 @@ namespace SchedulerApp.Services
                 return (false, $"Error accepting reservation request: {ex.Message}");
             }
         }
+
         public async Task<(bool IsSuccess, string Message)> AcceptReservationRequestAsync(Guid requestId)
         {
             var request = await _context.ReservationRequests.FindAsync(requestId);
